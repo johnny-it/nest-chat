@@ -89,5 +89,6 @@ API integration-тест использует PostgreSQL из `docker compose` �
 
 ## Скриншоты
 
-<img width="1343" height="1549" alt="nest-chat-1" src="https://github.com/user-attachments/assets/982581ee-c7b1-45f3-b7ce-5ea2d9ed1593" />
+<img width="3840" height="1936" alt="nest-chat-1" src="https://github.com/user-attachments/assets/7a844daf-c034-4a6e-a353-e3772cb03c8a" />
+
 <img width="3840" height="1934" alt="nest-chat-2" src="https://github.com/user-attachments/assets/94e66b38-95e1-4cd0-bcca-6e981d2d5ca6" />
