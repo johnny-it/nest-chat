@@ -1,0 +1,16 @@
+FROM node:24-alpine AS build
+WORKDIR /app
+COPY package.json package-lock.json tsconfig.base.json ./
+COPY apps/api/package.json apps/api/package.json
+COPY apps/web/package.json apps/web/package.json
+COPY packages/contracts/package.json packages/contracts/package.json
+RUN npm ci
+COPY apps/api apps/api
+COPY packages/contracts packages/contracts
+RUN npm run db:generate --workspace @nestchat/api && npm run build --workspace @nestchat/contracts && npm run build --workspace @nestchat/api
+
+FROM node:24-alpine
+WORKDIR /app
+COPY --from=build /app /app
+EXPOSE 3000
+CMD ["sh", "-c", "npm run db:deploy --workspace @nestchat/api && npm run start --workspace @nestchat/api"]

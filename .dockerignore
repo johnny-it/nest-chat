@@ -1,0 +1,9 @@
+.git
+.superpowers
+docs/superpowers
+node_modules
+**/node_modules
+**/dist
+coverage
+**/uploads
+.env

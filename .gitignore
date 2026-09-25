@@ -1,0 +1,40 @@
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+.vite/
+.turbo/
+playwright-report/
+test-results/
+
+# Environment and local data
+.env
+.env.*
+!.env.example
+uploads/
+data/
+*.log
+*.tsbuildinfo
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Agent, brainstorming, review, and implementation-plan artifacts
+.superpowers/
+docs/superpowers/
+.codex/
+.agent/
+.agents/
+.claude/
+.cursor/
+.windsurf/
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+
+# Local worktrees
+.worktrees/
+worktrees/

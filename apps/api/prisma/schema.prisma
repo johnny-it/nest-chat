@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AttachmentStatus {
+  PENDING
+  ATTACHED
+}
+
+model User {
+  id                 String                    @id @default(uuid()) @db.Uuid
+  username           String                    @unique
+  usernameNormalized String                    @unique
+  displayName        String
+  passwordHash       String
+  avatarPath         String?
+  lastSeenAt         DateTime?
+  createdAt          DateTime                  @default(now())
+  updatedAt          DateTime                  @updatedAt
+  sessions           RefreshSession[]
+  participants       ConversationParticipant[]
+  messages           Message[]
+  hiddenMessages     HiddenMessage[]
+  attachments        Attachment[]
+}
+
+model RefreshSession {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  tokenHash String    @unique
+  userAgent String?
+  ipAddress String?
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Conversation {
+  id           String                    @id @default(uuid()) @db.Uuid
+  directKey    String                    @unique
+  createdAt    DateTime                  @default(now())
+  updatedAt    DateTime                  @updatedAt
+  participants ConversationParticipant[]
+  messages     Message[]
+  attachments  Attachment[]
+}
+
+model ConversationParticipant {
+  conversationId         String       @db.Uuid
+  userId                 String       @db.Uuid
+  lastDeliveredMessageId String?      @db.Uuid
+  lastReadMessageId      String?      @db.Uuid
+  clearedAt              DateTime?
+  joinedAt               DateTime     @default(now())
+  conversation           Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user                   User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([conversationId, userId])
+  @@index([userId])
+}
+
+model Message {
+  id              String          @id @default(uuid()) @db.Uuid
+  clientMessageId String          @db.Uuid
+  conversationId  String          @db.Uuid
+  authorId        String          @db.Uuid
+  text            String?
+  replyToId       String?         @db.Uuid
+  createdAt       DateTime        @default(now())
+  editedAt        DateTime?
+  deletedForAllAt DateTime?
+  conversation    Conversation    @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  author          User            @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  replyTo         Message?        @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies         Message[]       @relation("MessageReplies")
+  attachments     Attachment[]
+  hiddenFor       HiddenMessage[]
+
+  @@unique([authorId, clientMessageId])
+  @@index([conversationId, createdAt, id])
+}
+
+model HiddenMessage {
+  messageId String   @db.Uuid
+  userId    String   @db.Uuid
+  hiddenAt  DateTime @default(now())
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([messageId, userId])
+  @@index([userId])
+}
+
+model Attachment {
+  id             String           @id @default(uuid()) @db.Uuid
+  uploaderId     String           @db.Uuid
+  conversationId String?          @db.Uuid
+  messageId      String?          @db.Uuid
+  storageKey     String           @unique
+  originalName   String
+  mimeType       String
+  size           Int
+  status         AttachmentStatus @default(PENDING)
+  expiresAt      DateTime?
+  createdAt      DateTime         @default(now())
+  uploader       User             @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
+  conversation   Conversation?    @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  message        Message?         @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([uploaderId, status])
+  @@index([expiresAt])
+}

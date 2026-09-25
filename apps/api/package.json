@@ -1,0 +1,51 @@
+{
+  "name": "@nestchat/api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "nest start --watch",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/main.js",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy"
+  },
+  "dependencies": {
+    "@nestchat/contracts": "0.1.0",
+    "@nestjs/common": "latest",
+    "@nestjs/config": "latest",
+    "@nestjs/core": "latest",
+    "@nestjs/jwt": "latest",
+    "@nestjs/platform-express": "latest",
+    "@nestjs/platform-socket.io": "latest",
+    "@nestjs/swagger": "^12.0.2",
+    "@nestjs/throttler": "latest",
+    "@nestjs/websockets": "latest",
+    "@prisma/client": "6.16.2",
+    "argon2": "latest",
+    "cookie-parser": "latest",
+    "file-type": "latest",
+    "helmet": "latest",
+    "multer": "latest",
+    "pino-http": "latest",
+    "reflect-metadata": "latest",
+    "rxjs": "latest",
+    "socket.io": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "latest",
+    "@nestjs/testing": "latest",
+    "@types/cookie-parser": "latest",
+    "@types/express": "latest",
+    "@types/multer": "latest",
+    "@types/node": "latest",
+    "@types/supertest": "latest",
+    "prisma": "6.16.2",
+    "supertest": "latest",
+    "typescript": "5.9.3",
+    "vitest": "latest"
+  }
+}
